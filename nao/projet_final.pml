@@ -14,7 +14,12 @@
         <Topic name="ExampleDialog_enu" src="behavior_1/ExampleDialog/ExampleDialog_enu.top" topicName="ExampleDialog" language="en_US" />
     </Topics>
     <IgnoredPaths>
-        <Path src="server" />
-        <Path src="server/__pycache__" />
+        <Path src="behavior_1/Aldebaran" />
+        <Path src="behavior_1" />
+        <Path src="behavior_1/ExampleDialog" />
+        <Path src="behavior_1/Aldebaran/choice_sentences.xml" />
+        <Path src="behavior_1/behavior.xar" />
+        <Path src="behavior_1/ExampleDialog/ExampleDialog.dlg" />
+        <Path src="behavior_1/ExampleDialog/ExampleDialog_enu.top" />
     </IgnoredPaths>
 </Package>
