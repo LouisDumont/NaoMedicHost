@@ -1,0 +1,84 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\frenchbsetup{StandardLists=true} % à inclure si on utilise \usepackage[french]{babel}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{xcolor}
+
+\title{Le Robot NAO en tant qu’assistant de salle d’attente}
+\author{B. Déchamps, G. Dekeyser, L. Dumont, G. Desforges, T. Viel}
+\date{January 2018}
+
+\begin{document}
+
+\maketitle
+
+\textbf{Mots clés :} Robotique, 
+\section{Introduction}
+
+\paragraph{} Le but de ce projet est de programmer le robot NAO afin qu'il permette de faciliter la gestion des patients en salle d’attente. Cela peut être chez un médecin (spécialiste/généraliste) ou dans une maison de retraite. Il s'avère particulièrement utile pour les personnes âgées, pour les personnes à mobilité réduite, pour les personnes ayant des problèmes de vue par exemple.
+Son rôle secondaire est de simplifier le travail du médecin et/ou des secrétaires.
+
+
+\section{Objectifs}
+Notre objectif pour ce projet est donc de rendre le robot NAO capable d'effectuer les tâches suivantes, en interaction avec les patients:
+\begin{itemize}
+    \item Accueillir de nouveaux arrivants dans la salle d'attente, associer leur visage à leur nom, les informer des dernières informations sur leur rendez-vous, les aider à s'asseoir et leur proposer de la lecture.
+    \item Gérer les passages: prévenir les patients lorsque le médecin est prêt à les recevoir, en associant les horaires de passage préfixés avec le retard (ou l'avance) potentiel du médecin sur son emploi du temps
+    \item Indiquer aux patients le lieu de consultation, et une fois ceux-ci sortis s'assurer qu'ils trouvent la sortie. Oublier le visage une fois que le patient a quitté le cabinet.
+\end{itemize}
+\paragraph{}\underline{Limites prévues du projets:} Nos objectifs sont bien sur soumis aux limitations techniques du robot NAO, à savoir: \\
+-Ses déplacements sont lents et peu stables en présence d'obstacles \\
+-De façon générale son comportement peu difficilement être prévu de A à Z en situation réelle, surtout lorsqu'il est en interaction avec un public non initié.
+
+
+\section{Implémentation}
+
+\subsection*{Fonctionnement général}
+Le robot NAO est connecté à une base de données \texttt{SQL} contenant les noms de patients attendus, leur horaire de rendez-vous et quelques informations complémentaires si celles-ci sont utiles.
+Il associera au moment de l'accueil le visage du patient à son nom (via la même base de données) pour pouvoir interagir plus facilement et donner accès au client aux données connues par le robot.
+
+\subsection*{Accueil du client}
+
+\noindent L'accueil du client par le robot se déroule de la façon suivante : 
+
+\begin{itemize}[parsep=0.1cm,itemsep=0.1cm,topsep=0.1cm]
+    \item Le robot NAO dit bonjour au patient et regarde si le visage est dans la base de données
+    \begin{itemize}[label=\rightarrow, font=\small, leftmargin=0.5cm ,parsep=0cm,itemsep=0cm,topsep=0cm]
+        \item Boucle de détection et reconnaissance de visage
+    \end{itemize}
+    \item Il lui demande son prénom et son nom
+    \item Il vérifie qu'il est dans la base donnée. 
+    
+    \begin{itemize}[label=\rightarrow, font=\small, leftmargin=0.5cm ,parsep=0cm, itemsep=0cm, topsep=0cm]
+        \item S'il n'y est pas, il redemande le prénom
+    \end{itemize}
+    \item Il associe ensuite le prénom à un visage s'il n'a pas été reconnu précédemment 
+    
+    \begin{itemize}[label=\rightarrow, font=\small, leftmargin=0.5cm ,parsep=0cm,itemsep=0cm,topsep=0cm]
+        \item Boucle de mémorisation de visage
+    \end{itemize}
+    
+    \item Il propose à l'utilisateur de s'asseoir
+    
+    
+\end{itemize}
+
+Le robot a accès aux données par une \texttt{REST API} développée avec \texttt{Flask} en \texttt{Python}. On utilise la librairie \texttt{httplib} dans l'interface Chorégraphe pour accéder à cette API.
+
+
+\subsection*{Gestion dans la salle d'attente}
+À n'importe quel moment (sous réserve que l'attention du robot ne soit pas accaparée par un autre patient), le patient déjà enregistré peu demander à NAO les informations auxquelles celui-ci a accès: horaire du rdv, temps d'attente estimé etc. NAO reconnaîtra son visage ou en cas de problème lui redemandera son nom pour savoir comment interroger la base de données. \\
+De plus, lorsque l'un des patient peut être pris en charge (à l'heure de son rendez-vous ou plus tard si retard du médecin), NAO appelle le patient en question pour lui indiquer que son tour est arriver et lui montrer la salle de la consultation.
+
+\subsection{Langages & Librairies}
+voici la liste des langages, librairies et interfaces utilisées dans notre projet:
+\begin{itemize}
+    \item Le code source est écrit en Python
+    \item Choregraphe pour l'interfaçage entre le code Python et le robot NAO
+    \item La base de données utilisée est codée en language SQL
+    \item Le serveur utilisé pour accueillir la base SQL est codé en Flask
+\end{itemize}
+
+\end{document}
